@@ -12,6 +12,7 @@
             // this is specially important when using the global namespace
             var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
             socket.on('connect', function() {
+                drawBoard();
                 socket.emit('my event', {data: 'I\'m connected!'});
             });
 
@@ -19,7 +20,7 @@
             // the data is displayed in the "Received" section of the page
             socket.on('my response', function(msg) {
                 //$('#log').append('<br>Received # : ' + msg.data);
-                colorPixel(msg.data, 255, 0, 0);
+                colorPixel(msg.data, msg.r, msg.g, msg.b);
             });
 
             var BOARD_HEIGHT = 20
@@ -53,8 +54,12 @@
                 var dir = 1;
                 for (var j = 0; j < BOARD_WIDTH; j++) {
                     for (var i = 0; i < BOARD_HEIGHT; i++) {
-                        ctx.strokeStyle = "black";
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(x, y, 20, 20);
+                        ctx.strokeStyle = "white";
                         ctx.strokeRect(x, y, 20, 20);
+
+                        ctx.fillStyle = "red";
                         ctx.fillText(pos, x, y + 10);
                         board_map[pos] = {
                             x: x,
@@ -72,6 +77,10 @@
                 var xy = board_map[pos];
                 ctx.fillStyle = rgbToHex(r, g, b);
                 ctx.fillRect(xy.x, xy.y, 20, 20);
+                ctx.strokeStyle = "white";
+                ctx.strokeRect(xy.x, xy.y, 20, 20);
+                ctx.fillStyle = "red";
+                ctx.fillText(pos, xy.x, xy.y + 10);
             }
 
             function clearPixel(pos) {
@@ -85,7 +94,6 @@
                 ctx.fillText(pos, xy.x, xy.y + 10);
             }
 
-            drawBoard();
         });
 
     </script>
