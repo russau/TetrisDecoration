@@ -4,6 +4,8 @@
     <title>Tetris-SocketIO Test</title>
     <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
             namespace = '/test'; // change to an empty string to use the global namespace
@@ -13,14 +15,16 @@
             var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
             socket.on('connect', function() {
                 drawBoard();
-                socket.emit('my event', {data: 'I\'m connected!'});
             });
 
             // event handler for server sent data
             // the data is displayed in the "Received" section of the page
             socket.on('my response', function(msg) {
                 //$('#log').append('<br>Received # : ' + msg.data);
-                colorPixel(msg.data, msg.r, msg.g, msg.b);
+                //colorPixel(msg.data, msg.r, msg.g, msg.b);
+                _.each(msg, function(element, index, list) {
+                  colorPixel(index, element.r, element.g, element.b);
+                });
             });
 
             var BOARD_HEIGHT = 20
@@ -99,7 +103,7 @@
     </script>
 </head>
 <body>
-    <div id="log">hello</div>
+    <div id="log"></div>
     <canvas id="myCanvas" width="500" height="500"></canvas>
 
 </body>
