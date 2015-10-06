@@ -1,8 +1,14 @@
 import time
 from copy import copy
 
-BOARD_HEIGHT = 20
-BOARD_WIDTH = 10
+BOARD_HEIGHT = 16
+BOARD_WIDTH = 8
+
+def unshared_copy(inList):
+    if isinstance(inList, list):
+        return list( map(unshared_copy, inList) )
+    return inList
+
 
 class Tetris:
 
@@ -56,20 +62,27 @@ class Tetris:
 
         destx, desty = pos, max(sum)-1
 
+        for n in range(BOARD_HEIGHT-1, desty, -1):
+            frame = unshared_copy(self.board)
+            for y in range(len(rotated)):
+                for x in range(len(rotated[y])):
+                    if rotated[y][x]==1:
+                        frame[n-y][destx+x] = piecech
+            squares = self.boardToLights(frame)
+            self.emitter.emit('my response', squares, namespace='/test')
+            time.sleep(0.5)
+
         # copy the rotated piece to its dest on the board
         for y in range(len(rotated)):
             for x in range(len(rotated[y])):
                 if rotated[y][x]==1:
                     self.board[desty-y][destx+x] = piecech
 
-
-        self.printBoard()
-
         # [0,21,50],[105,190,40],[155,161,162]
         # time.sleep(5)
-        squares = self.boardToLights()
+        squares = self.boardToLights(self.board)
         self.emitter.emit('my response', squares, namespace='/test')
-        time.sleep(5)
+        time.sleep(0.5)
         return True
 
     def rotatePiece(self, piece, degrees):
@@ -89,13 +102,13 @@ class Tetris:
             piece = copy(piecen)
         return piecen
 
-    def boardToLights(self):
+    def boardToLights(self, board):
         squares = []
         direction = -1
         y = BOARD_HEIGHT - 1;
         for x in range(BOARD_WIDTH):
             for _ in range(BOARD_HEIGHT):
-                spot = self.board[y][x]
+                spot = board[y][x]
                 if (spot != '.'):
                     colors = { 'i' : {'r':0x00, 'g':0xe4, 'b':0xe4}, # '#00E4E4',  // line piece
                     'o' : {'r':0xe4, 'g':0xde, 'b':0x00}, # '#E4DE00',  // square piece

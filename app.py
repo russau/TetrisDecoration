@@ -21,6 +21,13 @@ def background_thread():
         print "New Tetris class"
         t = Tetris.Tetris(socketio)
         result = True
+        result = t.dropPiece(0, 'o', 90)
+        result = t.dropPiece(2, 'o', 90)
+        result = t.dropPiece(4, 'o', 90)
+        result = t.dropPiece(6, 'o', 90)
+
+        result = t.dropPiece(0, 'i', 90)
+        result = t.dropPiece(4, 'i', 90)
         while result:
             piece = random.choice(['i','j','l','o','s','t','z'])
             result = t.dropPiece(5, piece, 90)
@@ -28,16 +35,16 @@ def background_thread():
 
 @app.route('/')
 def index():
-    global thread
-    print "starting thread"
-    if thread is None:
-        thread = Thread(target=background_thread)
-        thread.start()
     return render_template('index.html')
 
 @socketio.on('connect', namespace='/test')
 def test_connect():
     print('Client connected')
+    global thread
+    print "starting thread"
+    if thread is None:
+        thread = Thread(target=background_thread)
+        thread.start()
 
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
