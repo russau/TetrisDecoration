@@ -13,7 +13,8 @@ def unshared_copy(inList):
 class Tetris:
 
     def __init__(self, emitter):
-        self.board = [['.','.','.','.','.','.','.','.','.','.'] for x in range(BOARD_HEIGHT)]
+        ## HARDCODING the board width here tsk tsk
+        self.board = [['.','.','.','.','.','.','.','.'] for x in range(BOARD_HEIGHT)]
         self.gameResults = []
         self.emitter = emitter
 
@@ -77,12 +78,32 @@ class Tetris:
             for x in range(len(rotated[y])):
                 if rotated[y][x]==1:
                     self.board[desty-y][destx+x] = piecech
-
-        # [0,21,50],[105,190,40],[155,161,162]
-        # time.sleep(5)
         squares = self.boardToLights(self.board)
         self.emitter.emit('my response', squares, namespace='/test')
         time.sleep(0.5)
+
+        # test for rows to remove - could be a bit more efficient: break out when u hit a blank row
+        row = BOARD_HEIGHT - 1
+        rowsremoved = 0
+        while (row >= 0 ):
+            allfull = True
+            print "".join(self.board[row])
+            for x in self.board[row]:
+                if (x == '.'):
+                    allfull = False
+                    break
+            if allfull:
+                print "allfull true"
+                del self.board[row]
+                self.board.append(['.','.','.','.','.','.','.','.','.','.'])
+                rowsremoved += 1
+            else:
+                row -= 1
+
+        squares = self.boardToLights(self.board)
+        self.emitter.emit('my response', squares, namespace='/test')
+
+
         return True
 
     def rotatePiece(self, piece, degrees):
