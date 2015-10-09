@@ -13,8 +13,7 @@ def unshared_copy(inList):
 class Tetris:
 
     def __init__(self, emitter):
-        ## HARDCODING the board width here tsk tsk
-        self.board = [['.','.','.','.','.','.','.','.'] for x in range(BOARD_HEIGHT)]
+        self.board = [['.' for _ in range(BOARD_WIDTH)] for x in range(BOARD_HEIGHT)]
         self.gameResults = []
         self.emitter = emitter
 
@@ -94,8 +93,17 @@ class Tetris:
                     break
             if allfull:
                 print "allfull true"
+                self.board[row] = ['fw' for _ in range(BOARD_WIDTH)]
+                squares = self.boardToLights(self.board)
+                self.emitter.emit('my response', squares, namespace='/test')
+                time.sleep(0.25)
+                self.board[row] = ['fr' for _ in range(BOARD_WIDTH)]
+                squares = self.boardToLights(self.board)
+                self.emitter.emit('my response', squares, namespace='/test')
+                time.sleep(0.25)
+
                 del self.board[row]
-                self.board.append(['.','.','.','.','.','.','.','.','.','.'])
+                self.board.append(['.' for _ in range(BOARD_WIDTH)])
                 rowsremoved += 1
             else:
                 row -= 1
@@ -137,7 +145,9 @@ class Tetris:
                     'l' : {'r':0xe4, 'g':0x62, 'b':0x00}, # '#E46200',  // L piece
                     's' : {'r':0x00, 'g':0xe4, 'b':0x27}, # '#00E427',  // S piece
                     'z' : {'r':0xe4, 'g':0x00, 'b':0x27}, # '#E40027',  // Z piece
-                    't' : {'r':0x9c, 'g':0x13, 'b':0xe4}} # '#9C13E4'   // T piece
+                    't' : {'r':0x9c, 'g':0x13, 'b':0xe4}, # '#9C13E4'   // T piece
+                    'fw' : {'r':0xff, 'g':0xff, 'b':0xff}, #    // flash white
+                    'fr' : {'r':0xff, 'g':0x00, 'b':0x00}} #    // flash white
                     squares.append(colors[spot])
                 else:
                     squares.append({'r':0, 'g':0, 'b':0})
