@@ -86,18 +86,16 @@ class Tetris:
         rowsremoved = 0
         while (row >= 0 ):
             allfull = True
-            print "".join(self.board[row])
             for x in self.board[row]:
                 if (x == '.'):
                     allfull = False
                     break
             if allfull:
-                print "allfull true"
-                self.board[row] = ['fw' for _ in range(BOARD_WIDTH)]
+                self.board[row] = ['f1' for _ in range(BOARD_WIDTH)]
                 squares = self.boardToLights(self.board)
                 self.emitter.emit('my response', squares, namespace='/test')
                 time.sleep(0.25)
-                self.board[row] = ['fr' for _ in range(BOARD_WIDTH)]
+                self.board[row] = ['f2' for _ in range(BOARD_WIDTH)]
                 squares = self.boardToLights(self.board)
                 self.emitter.emit('my response', squares, namespace='/test')
                 time.sleep(0.25)
@@ -109,8 +107,9 @@ class Tetris:
                 row -= 1
 
         squares = self.boardToLights(self.board)
-        self.emitter.emit('my response', squares, namespace='/test')
 
+        self.emitter.emit('my response', squares, namespace='/test')
+        print self.boardToPOSTString()
 
         return True
 
@@ -146,8 +145,8 @@ class Tetris:
                     's' : {'r':0x00, 'g':0xe4, 'b':0x27}, # '#00E427',  // S piece
                     'z' : {'r':0xe4, 'g':0x00, 'b':0x27}, # '#E40027',  // Z piece
                     't' : {'r':0x9c, 'g':0x13, 'b':0xe4}, # '#9C13E4'   // T piece
-                    'fw' : {'r':0xff, 'g':0xff, 'b':0xff}, #    // flash white
-                    'fr' : {'r':0xff, 'g':0x00, 'b':0x00}} #    // flash white
+                    'f1' : {'r':0xff, 'g':0xff, 'b':0xff}, #    // flash one
+                    'f2' : {'r':0x00, 'g':0x00, 'b':0x00}} #    // flash two
                     squares.append(colors[spot])
                 else:
                     squares.append({'r':0, 'g':0, 'b':0})
@@ -156,6 +155,11 @@ class Tetris:
             y -= direction
             direction = -direction
         return squares;
+
+    def boardToPOSTString(self):
+        str = ""
+        rows =  ["".join(self.board[y]) for y in range(len(self.board)-1, -1, -1)]
+        return " ".join(rows)
 
     def printBoard(self):
         #print range(len(self.board)-1, -1, -1)
