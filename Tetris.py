@@ -109,7 +109,6 @@ class Tetris:
         squares = self.boardToLights(self.board)
 
         self.emitter.emit('my response', squares, namespace='/test')
-        print self.boardToPOSTString()
 
         return True
 

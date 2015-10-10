@@ -68,7 +68,7 @@ def getPositionAndDegrees(board, piece):
 	if len(keys) > 0:
 		new_board, legal = doMove(board, piece, combos[keys[0]][0],  combos[keys[0]][1])
 		outstr += "\nexpected board:\n%s" % '\n'.join(new_board)
-	open('lastrun.txt', 'a').write("\n---------------------\nboard:\n%s\npiece: %s\n combos: %s\noutstr: %s\n" % ('\n'.join(board), piece, combos, outstr))
+#	open('lastrun.txt', 'a').write("\n---------------------\nboard:\n%s\npiece: %s\n combos: %s\noutstr: %s\n" % ('\n'.join(board), piece, combos, outstr))
 
 	if len(keys) == 0:
 		# random, we're about to lose
