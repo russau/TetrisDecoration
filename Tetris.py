@@ -1,7 +1,7 @@
 import time
 from copy import copy
 
-BOARD_HEIGHT = 16
+BOARD_HEIGHT = 8
 BOARD_WIDTH = 8
 
 def unshared_copy(inList):
@@ -150,8 +150,10 @@ class Tetris:
                 else:
                     squares.append({'r':0, 'g':0, 'b':0})
 
-                y += direction
-            y -= direction
+                #y += direction
+                y -= 1
+            #y -= direction
+            y = BOARD_HEIGHT - 1
             direction = -direction
         return squares;
 

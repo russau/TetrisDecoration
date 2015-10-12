@@ -29,7 +29,7 @@ pieces = {
 		'z':[ [ [True, True, False, False],[False, True, True, False],[False, False, False, False],[False, False, False, False] ], [ [False, True, False, False],[True, True, False, False],[True, False, False, False],[False, False, False, False] ], [ [True, True, False, False],[False, True, True, False],[False, False, False, False],[False, False, False, False] ], [ [False, True, False, False],[True, True, False, False],[True, False, False, False],[False, False, False, False] ], ],
 	}
 
-board_height = 16
+board_height = 8
 board_width = 8
 
 def getPositionAndDegrees(board, piece):
