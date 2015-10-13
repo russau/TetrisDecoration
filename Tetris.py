@@ -6,7 +6,7 @@ try:
 except ImportError:
     print "non-neopixel"
 
-BOARD_HEIGHT = 8
+BOARD_HEIGHT = 16
 BOARD_WIDTH = 8
 
 def unshared_copy(inList):
@@ -26,7 +26,7 @@ pieces = {
 		'z':[ [ [True, True, False, False],[False, True, True, False],[False, False, False, False],[False, False, False, False] ], [ [False, True, False, False],[True, True, False, False],[True, False, False, False],[False, False, False, False] ], [ [True, True, False, False],[False, True, True, False],[False, False, False, False],[False, False, False, False] ], [ [False, True, False, False],[True, True, False, False],[True, False, False, False],[False, False, False, False] ], ],
 	}
 
-board_height = 8
+board_height = 16
 board_width = 8
 
 def getPositionAndDegrees(board, piece):
@@ -253,12 +253,20 @@ class Tetris:
         return piecen
 
     def boardToLights(self, board):
-        squares = []
+        array_pos = -1;
+        squares = [{'r':0, 'g':0, 'b':0}] * BOARD_WIDTH * BOARD_HEIGHT
         direction = -1
         y = BOARD_HEIGHT - 1;
         for x in range(BOARD_WIDTH):
             for _ in range(BOARD_HEIGHT):
                 spot = board[y][x]
+
+                # lots of hacky hardcoding to get the light postions
+                if y > 7:
+                    array_pos = (x * 8) + 15-y
+                else:
+                    array_pos = (x * 8) + 15-(y+8) + 64
+
                 if (spot != '.'):
                     colors = { 'i' : {'r':0x00, 'g':0xe4, 'b':0xe4}, # '#00E4E4',  // line piece
                     'o' : {'r':0xe4, 'g':0xde, 'b':0x00}, # '#E4DE00',  // square piece
@@ -269,13 +277,10 @@ class Tetris:
                     't' : {'r':0x9c, 'g':0x13, 'b':0xe4}, # '#9C13E4'   // T piece
                     'f1' : {'r':0xff, 'g':0xff, 'b':0xff}, #    // flash one
                     'f2' : {'r':0x00, 'g':0x00, 'b':0x00}} #    // flash two
-                    squares.append(colors[spot])
-                else:
-                    squares.append({'r':0, 'g':0, 'b':0})
+                    squares[array_pos] = colors[spot]
 
-                #y += direction
+
                 y -= 1
-            #y -= direction
             y = BOARD_HEIGHT - 1
             direction = -direction
         return squares;
@@ -301,7 +306,7 @@ def squaresEmitter(squares):
 
 if __name__ == '__main__':
     # LED strip configuration:
-    LED_COUNT      = 64      # Number of LED pixels.
+    LED_COUNT      = 128      # Number of LED pixels.
     LED_PIN        = 18      # GPIO pin connected to the pixels (must support PWM!).
     LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
     LED_DMA        = 5       # DMA channel to use for generating signal (try 5)

@@ -27,7 +27,7 @@
                 });
             });
 
-            var BOARD_HEIGHT = 8
+            var BOARD_HEIGHT = 16
             var BOARD_WIDTH = 8
 
             var c = document.getElementById("myCanvas");
@@ -52,12 +52,12 @@
             }
 
             function drawBoard() {
+                // board is made up of 2 8x8 squares ontop of each other
                 var x = 0;
                 y = 0;
                 var pos = 0;
-                var dir = 1;
                 for (var j = 0; j < BOARD_WIDTH; j++) {
-                    for (var i = 0; i < BOARD_HEIGHT; i++) {
+                    for (var i = 0; i < BOARD_HEIGHT/2; i++) {
                         ctx.fillStyle = "black";
                         ctx.fillRect(x, y, 20, 20);
                         ctx.strokeStyle = "white";
@@ -70,13 +70,36 @@
                             y: y
                         };
                         pos++;
-                        //if (i < BOARD_HEIGHT - 1) y += 20 * dir;
                         y += 20
                     }
                     x += 20;
-                    //dir = -dir;
                     y = 0;
                 }
+
+                var x = 0;
+                var y = BOARD_HEIGHT/2 * 20;
+                for (var j = 0; j < BOARD_WIDTH; j++) {
+                    for (var i = 0; i < BOARD_HEIGHT/2; i++) {
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(x, y, 20, 20);
+                        ctx.strokeStyle = "white";
+                        ctx.strokeRect(x, y, 20, 20);
+
+                        ctx.fillStyle = "red";
+                        ctx.fillText(pos, x, y + 10);
+                        board_map[pos] = {
+                            x: x,
+                            y: y
+                        };
+                        pos++;
+                        y += 20
+                    }
+                    x += 20;
+                    y = BOARD_HEIGHT/2 * 20;
+                }
+
+
+
             }
 
             function colorPixel(pos, r, g, b) {
