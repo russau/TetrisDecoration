@@ -1,7 +1,10 @@
 import time
 import random
 from copy import copy
-from neopixel import *
+try:
+    from neopixel import *
+except ImportError:
+    print "non-neopixel"
 
 BOARD_HEIGHT = 8
 BOARD_WIDTH = 8
@@ -316,4 +319,3 @@ if __name__ == '__main__':
 
         while result:
             result = t.dropRandom()
-
